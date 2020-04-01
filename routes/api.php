@@ -8,5 +8,6 @@ Route::middleware('auth:api')->group(function() {
 	    return $request->user();
 	});
 
-	Route::post('/posts', 'PostController@store')->name('post.store');
+	Route::get('/posts', 'PostController@index')->name('posts.index');
+	Route::post('/posts', 'PostController@store')->name('posts.store');
 });
