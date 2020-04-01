@@ -20,7 +20,7 @@ class PostToTimelineTest extends TestCase
         $user = factory(User::class)->create();
 
         $this->actingAs($user, 'api');
-    
+
         $response = $this->post('/api/posts', [
             'data' => [
                 'type' => 'posts',
@@ -54,7 +54,7 @@ class PostToTimelineTest extends TestCase
                     ],
                     'links' => [
                         'self' => url('/posts/'.$post->id)
-                    ] 
+                    ]
                  ]);
     }
 }
