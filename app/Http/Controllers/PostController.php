@@ -1,14 +1,16 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Post as PostResource;
+use App\Post;
 use App\Http\Resources\PostCollection;
+use App\Http\Resources\Post as PostResource;
 
 class PostController extends Controller
 {
     public function index()
     {
-        return new PostCollection(request()->user()->posts);
+        // return new PostCollection(request()->user()->posts);
+        return new PostCollection(Post::all());
     }
 
     public function store()
