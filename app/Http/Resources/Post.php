@@ -27,7 +27,7 @@ class Post extends JsonResource
                 ]
             ],
             'links' => [
-                'self' => url('/posts')
+                'self' => url("/posts/$this->id")
             ]
         ];
     }
