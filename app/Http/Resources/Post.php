@@ -27,7 +27,7 @@ class Post extends JsonResource
                 ]
             ],
             'links' => [
-                'self' => route('posts.index')
+                'self' => url('/posts')
             ]
         ];
     }

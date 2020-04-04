@@ -53,7 +53,7 @@ class PostToTimelineTest extends TestCase
                         ]
                     ],
                     'links' => [
-                        'self' => route('posts.index')
+                        'self' => url('/posts')
                     ]
                  ]);
     }

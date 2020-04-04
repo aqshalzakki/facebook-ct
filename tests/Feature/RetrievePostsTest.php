@@ -25,7 +25,7 @@ class RetrievePostsTest extends TestCase
 
         $posts = factory(Post::class, 2)->create(['user_id' => $user->id]);
 
-        $response = $this->get(route('posts.index'));
+        $response = $this->get('/api/posts');
 
         $response->assertStatus(200)
             ->assertJson([
@@ -54,7 +54,7 @@ class RetrievePostsTest extends TestCase
                     ]
                 ],
                 'links' => [
-                    'self' => route('posts.index')
+                    'self' => url('/posts')
                 ]
             ]);
     }
@@ -69,13 +69,13 @@ class RetrievePostsTest extends TestCase
 
         $posts = factory(Post::class)->create();
 
-        $response = $this->get(route('posts.index'));
+        $response = $this->get('/api/posts');
 
         $response->assertStatus(200)
             ->assertExactJson([
                 'data' => [],
                 'links' => [
-                    'self' => route('posts.index')
+                    'self' => url('/posts')
                 ]
             ]);
     }

@@ -11,7 +11,7 @@ class PostCollection extends ResourceCollection
         return [
             'data' => $this->collection,
             'links' => [
-                'self' => route('posts.index')
+                'self' => url('/posts')
             ]
         ];
     }
