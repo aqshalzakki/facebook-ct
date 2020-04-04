@@ -2210,6 +2210,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_Post__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/Post */ "./resources/js/components/Post.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2224,12 +2225,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Show',
+  components: {
+    Post: _components_Post__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
   data: function data() {
     return {
       user: null,
-      loading: true
+      posts: null,
+      userLoading: true,
+      postsLoading: true
     };
   },
   created: function created() {
@@ -2258,13 +2282,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
             case 10:
               _context.prev = 10;
-              _this.loading = false;
+              _this.userLoading = false;
               return _context.finish(10);
 
             case 13:
               _context.prev = 13;
               _context.next = 16;
-              return axios.get('posts');
+              return axios.get("users/".concat(_this.$route.params.userId, "/posts"));
 
             case 16:
               response = _context.sent;
@@ -2279,7 +2303,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
             case 23:
               _context.prev = 23;
-              _this.loading = false;
+              _this.postsLoading = false;
               return _context.finish(23);
 
             case 26:
@@ -2289,6 +2313,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       }, _callee, null, [[0, 7, 10, 13], [13, 20, 23, 26]]);
     }))();
+  },
+  methods: {
+    hasPosts: function hasPosts() {
+      return this.posts.data.length > 0;
+    }
   }
 });
 
@@ -39002,24 +39031,76 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticClass: "flex flex-col items-center" },
+    [
+      _c("div", { staticClass: "relative mb-8" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass:
+              "absolute flex items-center bottom-0 left-0 -mb-8 ml-12 z-20"
+          },
+          [
+            _vm._m(1),
+            _vm._v(" "),
+            _c("p", { staticClass: "text-2xl text-gray-100 ml-4" }, [
+              _vm._v(_vm._s(_vm.user.data.attributes.name))
+            ])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _vm.postsLoading
+        ? _c("p", [_vm._v("Loading posts...")])
+        : _vm._l(_vm.posts.data, function(post) {
+            return _c("Post", { key: post.data.post_id, attrs: { post: post } })
+          }),
+      _vm._v(" "),
+      !_vm.postsLoading && !_vm.hasPosts()
+        ? _c("p", [
+            _vm._v(
+              "\n        Oops :( You've got no posts. Get started...\n    "
+            )
+          ])
+        : _vm._e()
+    ],
+    2
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "w-100 h-64 overflow-hidden" }, [
-        _c("img", {
-          staticClass: "object-cover w-full",
-          attrs: {
-            src:
-              "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-            alt: "User profile image"
-          }
-        })
-      ])
+    return _c("div", { staticClass: "w-200 h-64 overflow-hidden z-10" }, [
+      _c("img", {
+        staticClass: "object-cover w-full",
+        attrs: {
+          src:
+            "https://i0.wp.com/www.saveseva.com/wp-content/uploads/2015/06/Landscape.jpg?fit=640%2C324",
+          alt: "User post image"
+        }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-32" }, [
+      _c("img", {
+        staticClass:
+          "object-cover w-32 h-32 border-4 border-gray-200 rounded-full shadow-lg",
+        attrs: {
+          src:
+            "https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg",
+          alt: "User profile image"
+        }
+      })
     ])
   }
 ]
@@ -54699,8 +54780,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Programming\PROJECTS\facebook-ct\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\Programming\PROJECTS\facebook-ct\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\user\Desktop\projects\facebook-ct\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\user\Desktop\projects\facebook-ct\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
