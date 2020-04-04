@@ -19,16 +19,13 @@
                 loading: true
             }
         },
-        mounted() {
-            axios.get('posts')
-                 .then(res => {
-                     this.posts = res.data
-                     this.loading = false
-                 })
-                 .catch(err => {
-                     this.loading = false
-                     console.log('Unable to Fetch The Posts!');
-                 })
+        async created() {
+            try {
+                const response = await axios.get('posts')
+                this.posts = response.data
+            } catch (error) {
+                console.log('Unable to Fetch The Posts!');
+            }finally { this.loading = false }
         }
 	}
 </script>
