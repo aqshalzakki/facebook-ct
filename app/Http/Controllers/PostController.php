@@ -10,10 +10,10 @@ class PostController extends Controller
     public function index()
     {
         // a_user_can_only_retrieve_their_posts
-        // return new PostCollection(request()->user()->posts);
+        return new PostCollection(request()->user()->posts);
 
         // for now lets just return all the post
-        return new PostCollection(Post::all());
+        // return new PostCollection(Post::all());
     }
 
     public function store()
