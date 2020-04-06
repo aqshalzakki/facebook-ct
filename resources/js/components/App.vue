@@ -17,7 +17,11 @@
 	import Sidebar from './layouts/Sidebar'
 
 	export default {
-		components: {Nav, Sidebar}
+		components: {Nav, Sidebar},
+
+		created() {
+			this.$store.dispatch('fetchAuthUser')
+		}
 	}
 </script>
 
