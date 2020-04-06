@@ -1945,6 +1945,17 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.$store.dispatch('fetchAuthUser');
+    this.changeTitle(this.$route.meta.title);
+  },
+  watch: {
+    $route: function $route(to, from) {
+      this.changeTitle(to.meta.title);
+    }
+  },
+  methods: {
+    changeTitle: function changeTitle(title) {
+      this.$store.dispatch('setPageTitle', title);
+    }
   }
 });
 
@@ -55717,11 +55728,17 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
   routes: [{
     path: '/',
     name: 'home',
-    component: _views_NewsFeed__WEBPACK_IMPORTED_MODULE_2__["default"]
+    component: _views_NewsFeed__WEBPACK_IMPORTED_MODULE_2__["default"],
+    meta: {
+      title: 'Home'
+    }
   }, {
     path: '/users/:userId',
     name: 'users.show',
-    component: _views_Users_Show__WEBPACK_IMPORTED_MODULE_3__["default"]
+    component: _views_Users_Show__WEBPACK_IMPORTED_MODULE_3__["default"],
+    meta: {
+      title: 'Profile'
+    }
   }]
 }));
 
@@ -55740,15 +55757,48 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _modules_user__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/user */ "./resources/js/store/modules/user.js");
+/* harmony import */ var _modules_pageTitle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/pageTitle */ "./resources/js/store/modules/pageTitle.js");
+
 
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
-    user: _modules_user__WEBPACK_IMPORTED_MODULE_2__["default"]
+    user: _modules_user__WEBPACK_IMPORTED_MODULE_2__["default"],
+    pageTitle: _modules_pageTitle__WEBPACK_IMPORTED_MODULE_3__["default"]
   }
 }));
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/pageTitle.js":
+/*!*************************************************!*\
+  !*** ./resources/js/store/modules/pageTitle.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: {
+    title: null
+  },
+  getters: {},
+  actions: {
+    setPageTitle: function setPageTitle(_ref, title) {
+      var commit = _ref.commit;
+      commit('SET_TITLE', title);
+    }
+  },
+  mutations: {
+    SET_TITLE: function SET_TITLE(state, title) {
+      state.title = title + ' | Facebook CT';
+      document.title = state.title;
+    }
+  }
+});
 
 /***/ }),
 

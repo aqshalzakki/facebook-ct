@@ -21,6 +21,19 @@
 
 		created() {
 			this.$store.dispatch('fetchAuthUser')
+			this.changeTitle(this.$route.meta.title)
+		},
+
+		watch : {
+			$route(to, from) {
+				this.changeTitle(to.meta.title)
+			}
+		},
+
+		methods: {
+			changeTitle(title) {
+				this.$store.dispatch('setPageTitle', title)
+			}
 		}
 	}
 </script>
