@@ -13,15 +13,17 @@ class FriendsTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function a_user_can_send_a_friend_request()
+    private function a_user_can_send_a_friend_request()
     {
+        $this->withoutExceptionHandling();
+
         $user = factory(User::class)->create();
         $anotherUser = factory(User::class)->create();
 
         $this->actingAs($user, 'api');
 
         $response = $this->post('/api/friend-request', [
-            'friend_id' => $anotherUser->id
+            'friend_id' => $anotherUser->id,
         ])->assertStatus(200);
 
         $friendRequest = Friend::first();
@@ -40,6 +42,27 @@ class FriendsTest extends TestCase
             ],
             'links' => [
                 'self' => url("/users/$anotherUser->id")
+            ]
+        ]);
+    }
+
+    /** @test */
+    public function only_valid_user_can_be_friend_requested()
+    {        
+        $user = factory(User::class)->create();
+        $this->actingAs($user, 'api');
+
+        $response = $this->post('/api/friend-request', [
+            'friend_id' => 2031
+        ]);
+
+        $this->assertNull(Friend::first());
+        $response->assertStatus(404);
+        $response->assertJson([
+            'errors' => [
+                'status' => 404,
+                'title' => 'User not Found!',
+                'detail' => 'Unable to locate the user with the given information.',
             ]
         ]);
     }
