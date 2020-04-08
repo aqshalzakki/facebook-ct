@@ -25,4 +25,21 @@ class MyOwnTest extends TestCase
                 'token' => 'random token'
             ]);
     }
+
+    /** @test */
+    public function it_should_return_user_name_with_uppercase()
+    {
+    	$this->withoutExceptionHandling();
+    	$user = factory(User::class)->create();
+
+    	$response = $this->get('username');
+
+    	$username = $response->decodeResponseJson()['name'];
+
+    	$response->assertExactJson([
+    		'name' => $user->name
+    	]);
+
+    	$this->assertEquals($user->name, $username);
+    }
 }

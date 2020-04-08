@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class TestController extends Controller
 {
@@ -12,5 +13,17 @@ class TestController extends Controller
     		'foo' => 'bar',
     		'token' => 'random token',
     	];
+    }
+
+    public function getUsername()
+    {
+    	return [
+    		'name' => User::first()->name
+    	];
+    }
+
+    public function getRoleId()
+    {
+    	return User::first()->role_id;
     }
 }
