@@ -24,6 +24,8 @@ class TestController extends Controller
 
     public function getRoleId()
     {
-    	return User::first()->role_id;
+    	return [
+    		'role_id' => User::first()->role_id
+    	];
     }
 }
