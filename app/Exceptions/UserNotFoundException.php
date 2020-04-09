@@ -18,7 +18,7 @@ class UserNotFoundException extends Exception
             'errors' => [
                 'status' => 404,
                 'title' => 'User not Found!',
-                'detail' => "Unable to locate the user with the given id of $request->id.",
+                'detail' => "Unable to locate the user with the given id of $request->user_id.",
             ]
         ], 404);
     }

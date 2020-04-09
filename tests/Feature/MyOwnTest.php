@@ -52,11 +52,11 @@ class MyOwnTest extends TestCase
     	$response = $this->get('role-id');
 
     	$roleId = $response->decodeResponseJson()['role_id'];
-    	dd($roleId);
+
     	$response->assertExactJson([
     		'role_id' => $user->role_id
     	]);
 
-    	$this->assertEquals($user->role_id, $roleId);
+        $this->assertEquals($user->role_id, $roleId);
     }
 }
