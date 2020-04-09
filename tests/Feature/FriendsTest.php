@@ -47,13 +47,15 @@ class FriendsTest extends TestCase
     }
 
     /** @test */
-    public function only_valid_user_can_be_friend_requested()
-    {        
+    public function only_valid_user_can_be_friend_requested() 
+    {   
+        $id = 12345;
+
         $user = factory(User::class)->create();
         $this->actingAs($user, 'api');
 
         $response = $this->post('/api/friend-request', [
-            'friend_id' => 2031
+            'id' => $id
         ]);
 
         $this->assertNull(Friend::first());
@@ -62,7 +64,7 @@ class FriendsTest extends TestCase
             'errors' => [
                 'status' => 404,
                 'title' => 'User not Found!',
-                'detail' => 'Unable to locate the user with the given information.',
+                'detail' => "Unable to locate the user with the given id of $id.",
             ]
         ]);
     }

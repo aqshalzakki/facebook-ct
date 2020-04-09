@@ -13,11 +13,11 @@ class FriendRequestController extends Controller
     public function store()
     {
 		$data = request()->validate([
-			'friend_id' => 'required'
+			'id' => 'required'
 		]);
 
 		try {
-			User::findOrFail($data['friend_id'])
+			User::findOrFail($data['id'])
 				->friends()
 				->attach(auth()->user());
 
@@ -27,7 +27,7 @@ class FriendRequestController extends Controller
 
 		return new FriendResource(
 			Friend::where('user_id', auth()->id())
-				->where('friend_id', $data['friend_id'])
+				->where('friend_id', $data['id'])
 				->first()
 		);
     }
