@@ -24,7 +24,7 @@ class FriendsTest extends TestCase
         $this->actingAs($user, 'api');
 
         $response = $this->post('/api/friend-request', [
-            'user_id' => $anotherUser->id,
+            'friend_id' => $anotherUser->id,
         ])->assertStatus(200);
 
         $friendRequest = Friend::first();
@@ -56,7 +56,7 @@ class FriendsTest extends TestCase
         $this->actingAs($user, 'api');
 
         $response = $this->post('/api/friend-request', [
-            'user_id' => $id
+            'friend_id' => $id
         ]);
 
         $this->assertNull(Friend::first());
@@ -65,7 +65,7 @@ class FriendsTest extends TestCase
             'errors' => [
                 'status' => 404,
                 'title' => 'User not Found!',
-                'detail' => "Unable to locate the user with the given id of $id.",
+                'detail' => "Unable to locate the user with the given information.",
             ]
         ]);
     }
@@ -82,8 +82,8 @@ class FriendsTest extends TestCase
 
         // make a friend request
         $this->post('/api/friend-request', [
-            'user_id' => $anotherUser->id,
-            ])->assertStatus(200);
+            'friend_id' => $anotherUser->id,
+        ])->assertStatus(200);
             
         // accept a friend request as another user
         $response = $this->actingAs($anotherUser, 'api')
@@ -117,7 +117,7 @@ class FriendsTest extends TestCase
     /** @test */
     public function only_valid_friend_requests_can_be_accepted()
     {
-        $user_id = 3413;
+        $user_id = rand(1, 100);
         $anotherUser = factory(User::class)->create();
 
         // accept a friend request
@@ -132,7 +132,7 @@ class FriendsTest extends TestCase
             'errors' => [
                 'status' => 404,
                 'title' => 'Friend Request not Found!',
-                'detail' => "Unable to locate the friend request with the given id of $user_id.",
+                'detail' => "Unable to locate the friend request with the given information.",
             ]
         ]);
     }
@@ -150,7 +150,7 @@ class FriendsTest extends TestCase
 
         // make a friend request
         $this->post('/api/friend-request', [
-            'user_id' => $anotherUser->id,
+            'friend_id' => $anotherUser->id,
         ])->assertStatus(200);
         
         // accept a friend request
@@ -158,8 +158,7 @@ class FriendsTest extends TestCase
             ->post('/api/friend-request-response', [
                 'user_id' => $user->id,
                 'status' => 1,
-        ]);
-        $response->assertStatus(404);
+        ])->assertStatus(404);
 
         $friendRequest = Friend::first();
 
@@ -170,8 +169,39 @@ class FriendsTest extends TestCase
             'errors' => [
                 'status' => 404,
                 'title' => 'Friend Request not Found!',
-                'detail' => "Unable to locate the friend request with the given id of $user->id.",
+                'detail' => "Unable to locate the friend request with the given information.",
             ]
         ]);
+    }
+
+    /** @test */
+    public function a_friend_id_is_required_for_friend_request()
+    {
+        $user = factory(User::class)->create();
+        $response = $this->actingAs($user, 'api')
+            ->post('/api/friend-request', [
+                'friend_id' => null,
+            ])->assertStatus(422);
+        
+        $arrayResponse = $response->decodeResponseJson();
+
+        $this->assertArrayHasKey('friend_id', $arrayResponse['errors']['meta']);
+
+    }
+
+    /** @test */
+    public function a_user_id_and_status_is_required_for_friend_request_response()
+    {
+        $user = factory(User::class)->create();
+        $response = $this->actingAs($user, 'api')
+            ->post('/api/friend-request-response', [
+                'user_id' => null,
+                'status' => null,
+            ])->assertStatus(422);
+        
+        $arrayResponse = $response->decodeResponseJson();
+
+        $this->assertArrayHasKey('user_id', $arrayResponse['errors']['meta']);    
+        $this->assertArrayHasKey('status', $arrayResponse['errors']['meta']);    
     }
 }

@@ -18,7 +18,7 @@ class FriendRequestNotFoundException extends Exception
             'errors' => [
                 'status' => 404,
                 'title' => 'Friend Request not Found!',
-                'detail' => "Unable to locate the friend request with the given id of $request->user_id.",
+                'detail' => "Unable to locate the friend request with the given information.",
             ]
         ], 404);
     }

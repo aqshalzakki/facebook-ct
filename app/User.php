@@ -53,7 +53,7 @@ class User extends Authenticatable
         return strtoupper($value);
     }
 
-    public function getRoleIdAttribute($value)
+    public function getRoleIdAttribute(int $value)
     {
         return (int) $value === 1 ? 'User' : 'Admin';
     }
