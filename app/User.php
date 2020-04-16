@@ -48,11 +48,6 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
-    public function getNameAttribute($value)
-    {
-        return strtoupper($value);
-    }
-
     public function getRoleIdAttribute(int $value)
     {
         return (int) $value === 1 ? 'User' : 'Admin';

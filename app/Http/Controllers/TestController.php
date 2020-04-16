@@ -7,20 +7,6 @@ use App\User;
 
 class TestController extends Controller
 {
-    public function getToken()
-    {
-    	return [
-    		'token' => 'random token',
-    	];
-    }
-
-    public function getUsername()
-    {
-    	return [
-    		'name' => User::first()->name
-    	];
-    }
-
     public function getRoleId()
     {
     	return [
