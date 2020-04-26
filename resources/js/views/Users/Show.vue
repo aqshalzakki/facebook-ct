@@ -12,6 +12,12 @@
 
               <p class="text-2xl text-gray-100 ml-4">{{ user.data.attributes.name }}</p>
           </div>
+          
+          <div class="absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-20">
+              <button class="py-1 px-3 bg-gray-400 rounded">Add Friend</button>
+          </div>
+          
+
       </div>
 
       <p v-if="postsLoading">Loading posts...</p>
@@ -24,42 +30,58 @@
 </template>
 
 <script>
-import Post from '../../components/Post' 
+import Post from '../../components/Post'
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
     name: 'Show',
     components: { Post },
     data() {
         return {
-            user: null,
             posts: null,
-            userLoading: true,
             postsLoading: true,
         }
     },
 
     async created() {
-        try {
-            const res = await axios.get(`users/${this.$route.params.userId}`)
-            this.user = res.data
-        } catch (error) {
-            console.log(`Cannot fetch user with id of ${this.$route.params.userId}!`);
- 
-        } finally { this.userLoading = false }
 
-        try {
-            const response = await axios.get(`users/${this.$route.params.userId}/posts`)
-            this.posts = response.data
-        } catch (error) {
-            console.log('Unable to Fetch The Posts!');
-        } finally { this.postsLoading = false } 
+        this.fetchUser(this.userId)
+
+        this.fetchPosts(this.userId)
     },
 
     methods: {
-
+        ...mapActions({
+            fetchUser : 'fetchUser'
+        }),
         hasPosts() {
             return this.posts.data.length > 0
+        },
+        async fetchPosts(userId) {
+            try {
+                const response = await axios.get(`users/${userId}/posts`)
+                this.posts = response.data
+            } catch (error) {
+                console.log('Unable to Fetch The Posts!');
+            } finally { this.postsLoading = false }
         }
 
+    },
+
+    computed: {
+        ...mapGetters({
+            user: 'user',
+        }),
+        userId() {
+            return this.$route.params.userId
+        },
+    },
+
+    watch: {
+        $route(to, from) {
+            this.fetchUser(to.params.userId)
+            this.fetchPosts(to.params.userId)
+        }
     }
 }
 </script>

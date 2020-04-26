@@ -1936,6 +1936,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2243,7 +2245,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_Post__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/Post */ "./resources/js/components/Post.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -2274,6 +2283,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Show',
@@ -2282,9 +2298,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      user: null,
       posts: null,
-      userLoading: true,
       postsLoading: true
     };
   },
@@ -2292,63 +2306,77 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var _this = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-      var res, response;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.prev = 0;
-              _context.next = 3;
-              return axios.get("users/".concat(_this.$route.params.userId));
+              _this.fetchUser(_this.userId);
 
-            case 3:
-              res = _context.sent;
-              _this.user = res.data;
-              _context.next = 10;
-              break;
+              _this.fetchPosts(_this.userId);
 
-            case 7:
-              _context.prev = 7;
-              _context.t0 = _context["catch"](0);
-              console.log("Cannot fetch user with id of ".concat(_this.$route.params.userId, "!"));
-
-            case 10:
-              _context.prev = 10;
-              _this.userLoading = false;
-              return _context.finish(10);
-
-            case 13:
-              _context.prev = 13;
-              _context.next = 16;
-              return axios.get("users/".concat(_this.$route.params.userId, "/posts"));
-
-            case 16:
-              response = _context.sent;
-              _this.posts = response.data;
-              _context.next = 23;
-              break;
-
-            case 20:
-              _context.prev = 20;
-              _context.t1 = _context["catch"](13);
-              console.log('Unable to Fetch The Posts!');
-
-            case 23:
-              _context.prev = 23;
-              _this.postsLoading = false;
-              return _context.finish(23);
-
-            case 26:
+            case 2:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 7, 10, 13], [13, 20, 23, 26]]);
+      }, _callee);
     }))();
   },
-  methods: {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])({
+    fetchUser: 'fetchUser'
+  }), {
     hasPosts: function hasPosts() {
       return this.posts.data.length > 0;
+    },
+    fetchPosts: function fetchPosts(userId) {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return axios.get("users/".concat(userId, "/posts"));
+
+              case 3:
+                response = _context2.sent;
+                _this2.posts = response.data;
+                _context2.next = 10;
+                break;
+
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                console.log('Unable to Fetch The Posts!');
+
+              case 10:
+                _context2.prev = 10;
+                _this2.postsLoading = false;
+                return _context2.finish(10);
+
+              case 13:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[0, 7, 10, 13]]);
+      }))();
+    }
+  }),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])({
+    user: 'user'
+  }), {
+    userId: function userId() {
+      return this.$route.params.userId;
+    }
+  }),
+  watch: {
+    $route: function $route(to, from) {
+      this.fetchUser(to.params.userId);
+      this.fetchPosts(to.params.userId);
     }
   }
 });
@@ -39090,7 +39118,9 @@ var render = function() {
               _vm._v(_vm._s(_vm.user.data.attributes.name))
             ])
           ]
-        )
+        ),
+        _vm._v(" "),
+        _vm._m(2)
       ]),
       _vm._v(" "),
       _vm.postsLoading
@@ -39141,6 +39171,23 @@ var staticRenderFns = [
         }
       })
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass:
+          "absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-20"
+      },
+      [
+        _c("button", { staticClass: "py-1 px-3 bg-gray-400 rounded" }, [
+          _vm._v("Add Friend")
+        ])
+      ]
+    )
   }
 ]
 render._withStripped = true
@@ -55757,7 +55804,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _modules_user__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/user */ "./resources/js/store/modules/user.js");
-/* harmony import */ var _modules_pageTitle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/pageTitle */ "./resources/js/store/modules/pageTitle.js");
+/* harmony import */ var _modules_profile__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/profile */ "./resources/js/store/modules/profile.js");
+/* harmony import */ var _modules_pageTitle__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/pageTitle */ "./resources/js/store/modules/pageTitle.js");
+
 
 
 
@@ -55766,7 +55815,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
     user: _modules_user__WEBPACK_IMPORTED_MODULE_2__["default"],
-    pageTitle: _modules_pageTitle__WEBPACK_IMPORTED_MODULE_3__["default"]
+    profile: _modules_profile__WEBPACK_IMPORTED_MODULE_3__["default"],
+    pageTitle: _modules_pageTitle__WEBPACK_IMPORTED_MODULE_4__["default"]
   }
 }));
 
@@ -55796,6 +55846,84 @@ __webpack_require__.r(__webpack_exports__);
     SET_TITLE: function SET_TITLE(state, title) {
       state.title = title + ' | Facebook CT';
       document.title = state.title;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/profile.js":
+/*!***********************************************!*\
+  !*** ./resources/js/store/modules/profile.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: {
+    user: null,
+    userStatus: null
+  },
+  getters: {
+    user: function user(state) {
+      return state.user;
+    },
+    userStatus: function userStatus(state) {
+      return state.userStatus;
+    }
+  },
+  actions: {
+    fetchUser: function fetchUser(_ref, userId) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var commit, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                commit = _ref.commit;
+                commit('SET_USER_STATUS', 'loading');
+                _context.prev = 2;
+                _context.next = 5;
+                return axios.get("users/".concat(userId));
+
+              case 5:
+                res = _context.sent;
+                commit('SET_USER', res.data);
+                commit('SET_USER_STATUS', 'success');
+                _context.next = 14;
+                break;
+
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](2);
+                commit('SET_USER_STATUS', 'error');
+                console.log("Cannot fetch user with id of ".concat(userId, "!"));
+
+              case 14:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[2, 10]]);
+      }))();
+    }
+  },
+  mutations: {
+    SET_USER: function SET_USER(state, user) {
+      state.user = user;
+    },
+    SET_USER_STATUS: function SET_USER_STATUS(state, status) {
+      state.userStatus = status;
     }
   }
 });
@@ -56039,8 +56167,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\user\Desktop\projects\facebook-ct\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\user\Desktop\projects\facebook-ct\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Programming\Development\facebook-ct\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Programming\Development\facebook-ct\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -6,6 +6,8 @@
 			<Sidebar />
 
 			<div class="overflow-x-hidden w-2/3">
+				<!-- Coders tape untuk user profile yang dinamis -->
+				<!-- <router-view :key="$route.fullPath"/> -->
 				<router-view/>
 			</div>
 		</div>
