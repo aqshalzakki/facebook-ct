@@ -14,7 +14,9 @@
           </div>
           
           <div class="absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-20">
-              <button class="py-1 px-3 bg-gray-400 rounded">Add Friend</button>
+              <button v-if="friendButtonText" @click="addFriend" class="py-1 px-3 bg-gray-400 rounded">
+                  {{ friendButtonText }}
+              </button>
           </div>
           
 
@@ -57,6 +59,11 @@ export default {
         hasPosts() {
             return this.posts.data.length > 0
         },
+        addFriend(event) {
+            console.log(`${this.userId} will be added!`);
+            
+            this.$store.dispatch('sendFriendRequest', this.userId)
+        },
         async fetchPosts(userId) {
             try {
                 const response = await axios.get(`users/${userId}/posts`)
@@ -71,6 +78,7 @@ export default {
     computed: {
         ...mapGetters({
             user: 'user',
+            friendButtonText: 'friendButtonText',
         }),
         userId() {
             return this.$route.params.userId

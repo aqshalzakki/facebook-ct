@@ -2289,6 +2289,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2327,6 +2329,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   }), {
     hasPosts: function hasPosts() {
       return this.posts.data.length > 0;
+    },
+    addFriend: function addFriend(event) {
+      console.log("".concat(this.userId, " will be added!"));
+      this.$store.dispatch('sendFriendRequest', this.userId);
     },
     fetchPosts: function fetchPosts(userId) {
       var _this2 = this;
@@ -2367,7 +2373,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   }),
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])({
-    user: 'user'
+    user: 'user',
+    friendButtonText: 'friendButtonText'
   }), {
     userId: function userId() {
       return this.$route.params.userId;
@@ -39120,7 +39127,31 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
-        _vm._m(2)
+        _c(
+          "div",
+          {
+            staticClass:
+              "absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-20"
+          },
+          [
+            _vm.friendButtonText
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "py-1 px-3 bg-gray-400 rounded",
+                    on: { click: _vm.addFriend }
+                  },
+                  [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(_vm.friendButtonText) +
+                        "\n            "
+                    )
+                  ]
+                )
+              : _vm._e()
+          ]
+        )
       ]),
       _vm._v(" "),
       _vm.postsLoading
@@ -39171,23 +39202,6 @@ var staticRenderFns = [
         }
       })
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-20"
-      },
-      [
-        _c("button", { staticClass: "py-1 px-3 bg-gray-400 rounded" }, [
-          _vm._v("Add Friend")
-        ])
-      ]
-    )
   }
 ]
 render._withStripped = true
@@ -55872,25 +55886,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: {
     user: null,
-    userStatus: null
+    userStatus: null,
+    friendButtonText: null
   },
   getters: {
     user: function user(state) {
       return state.user;
     },
+    friendship: function friendship(state) {
+      return state.user.data.attributes.friendship;
+    },
     userStatus: function userStatus(state) {
       return state.userStatus;
+    },
+    friendButtonText: function friendButtonText(state) {
+      return state.friendButtonText;
     }
   },
   actions: {
     fetchUser: function fetchUser(_ref, userId) {
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var commit, res;
+        var commit, dispatch, res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                commit = _ref.commit;
+                commit = _ref.commit, dispatch = _ref.dispatch;
                 commit('SET_USER_STATUS', 'loading');
                 _context.prev = 2;
                 _context.next = 5;
@@ -55899,23 +55920,71 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 5:
                 res = _context.sent;
                 commit('SET_USER', res.data);
-                commit('SET_USER_STATUS', 'success');
-                _context.next = 14;
+                commit('SET_USER_STATUS', 'success'); // set friend button text
+
+                dispatch('setFriendButtonText');
+                _context.next = 15;
                 break;
 
-              case 10:
-                _context.prev = 10;
+              case 11:
+                _context.prev = 11;
                 _context.t0 = _context["catch"](2);
                 commit('SET_USER_STATUS', 'error');
                 console.log("Cannot fetch user with id of ".concat(userId, "!"));
 
-              case 14:
+              case 15:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[2, 10]]);
+        }, _callee, null, [[2, 11]]);
       }))();
+    },
+    sendFriendRequest: function sendFriendRequest(_ref2, friend_id) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var commit, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                commit = _ref2.commit;
+                commit('SET_BUTTON_TEXT', 'Loading');
+                _context2.prev = 2;
+                _context2.next = 5;
+                return axios.post('friend-request', {
+                  friend_id: friend_id
+                });
+
+              case 5:
+                res = _context2.sent;
+                commit('SET_BUTTON_TEXT', 'Pending Friend Request');
+                console.log('Friend requested!');
+                _context2.next = 14;
+                break;
+
+              case 10:
+                _context2.prev = 10;
+                _context2.t0 = _context2["catch"](2);
+                console.log('Unknown error has been occured! please try again!');
+                commit('SET_BUTTON_TEXT', 'Add Friend');
+
+              case 14:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[2, 10]]);
+      }))();
+    },
+    setFriendButtonText: function setFriendButtonText(_ref3) {
+      var commit = _ref3.commit,
+          friendship = _ref3.getters.friendship;
+
+      if (friendship === null) {
+        commit('SET_BUTTON_TEXT', 'Add Friend');
+      } else if (friendship.data.attributes.confirmed_at === null) {
+        commit('SET_BUTTON_TEXT', 'Pending Friend Request');
+      }
     }
   },
   mutations: {
@@ -55924,6 +55993,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     SET_USER_STATUS: function SET_USER_STATUS(state, status) {
       state.userStatus = status;
+    },
+    SET_BUTTON_TEXT: function SET_BUTTON_TEXT(state, text) {
+      state.friendButtonText = text;
     }
   }
 });

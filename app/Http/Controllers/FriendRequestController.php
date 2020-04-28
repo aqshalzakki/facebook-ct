@@ -19,7 +19,10 @@ class FriendRequestController extends Controller
 		try {
 			User::findOrFail($data['friend_id'])
 				->friends()
-				->attach(auth()->user());
+				->attach(auth()->user(), [
+					'created_at' => now(),
+					'updated_at' => now(),
+				]);
 
 		} catch(ModelNotFoundException $e) {
 			throw new UserNotFoundException();
