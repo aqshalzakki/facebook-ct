@@ -10,7 +10,7 @@
                   <img src="https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg" alt="User profile image" class="object-cover w-32 h-32 border-4 border-gray-200 rounded-full shadow-lg">
               </div>              
 
-              <p class="text-2xl text-gray-100 ml-4">{{ user.data.attributes.name }}</p>
+              <p v-if="user" class="text-2xl text-gray-100 ml-4">{{ user.data.attributes.name }}</p>
           </div>
           
           <div class="absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-20">

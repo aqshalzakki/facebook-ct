@@ -39121,9 +39121,11 @@ var render = function() {
           [
             _vm._m(1),
             _vm._v(" "),
-            _c("p", { staticClass: "text-2xl text-gray-100 ml-4" }, [
-              _vm._v(_vm._s(_vm.user.data.attributes.name))
-            ])
+            _vm.user
+              ? _c("p", { staticClass: "text-2xl text-gray-100 ml-4" }, [
+                  _vm._v(_vm._s(_vm.user.data.attributes.name))
+                ])
+              : _vm._e()
           ]
         ),
         _vm._v(" "),
@@ -55886,8 +55888,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: {
     user: null,
-    userStatus: null,
-    friendButtonText: null
+    userStatus: null
   },
   getters: {
     user: function user(state) {
@@ -55899,19 +55900,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     userStatus: function userStatus(state) {
       return state.userStatus;
     },
-    friendButtonText: function friendButtonText(state) {
-      return state.friendButtonText;
+    friendButtonText: function friendButtonText(state, getters, rootState) {
+      if (getters.friendship === null) {
+        return 'Add Friend';
+      } else if (getters.friendship.data.attributes.confirmed_at === null) {
+        return 'Pending Friend Request';
+      }
     }
   },
   actions: {
     fetchUser: function fetchUser(_ref, userId) {
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var commit, dispatch, res;
+        var commit, res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                commit = _ref.commit, dispatch = _ref.dispatch;
+                commit = _ref.commit;
                 commit('SET_USER_STATUS', 'loading');
                 _context.prev = 2;
                 _context.next = 5;
@@ -55920,29 +55925,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 5:
                 res = _context.sent;
                 commit('SET_USER', res.data);
-                commit('SET_USER_STATUS', 'success'); // set friend button text
-
-                dispatch('setFriendButtonText');
-                _context.next = 15;
+                commit('SET_USER_STATUS', 'success');
+                _context.next = 14;
                 break;
 
-              case 11:
-                _context.prev = 11;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](2);
-                commit('SET_USER_STATUS', 'error');
+                commit(' SET_USER_STATUS', 'error');
                 console.log("Cannot fetch user with id of ".concat(userId, "!"));
 
-              case 15:
+              case 14:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[2, 11]]);
+        }, _callee, null, [[2, 10]]);
       }))();
     },
     sendFriendRequest: function sendFriendRequest(_ref2, friend_id) {
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        var commit, res;
+        var commit, _yield$axios$post, data;
+
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -55956,40 +55960,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 5:
-                res = _context2.sent;
+                _yield$axios$post = _context2.sent;
+                data = _yield$axios$post.data;
+                commit('SET_USER_FRIENDSHIP', data);
                 commit('SET_BUTTON_TEXT', 'Pending Friend Request');
                 console.log('Friend requested!');
-                _context2.next = 14;
+                _context2.next = 16;
                 break;
 
-              case 10:
-                _context2.prev = 10;
+              case 12:
+                _context2.prev = 12;
                 _context2.t0 = _context2["catch"](2);
                 console.log('Unknown error has been occured! please try again!');
                 commit('SET_BUTTON_TEXT', 'Add Friend');
 
-              case 14:
+              case 16:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[2, 10]]);
+        }, _callee2, null, [[2, 12]]);
       }))();
-    },
-    setFriendButtonText: function setFriendButtonText(_ref3) {
-      var commit = _ref3.commit,
-          friendship = _ref3.getters.friendship;
-
-      if (friendship === null) {
-        commit('SET_BUTTON_TEXT', 'Add Friend');
-      } else if (friendship.data.attributes.confirmed_at === null) {
-        commit('SET_BUTTON_TEXT', 'Pending Friend Request');
-      }
     }
   },
   mutations: {
     SET_USER: function SET_USER(state, user) {
       state.user = user;
+    },
+    SET_USER_FRIENDSHIP: function SET_USER_FRIENDSHIP(state, friendship) {
+      state.user.data.attributes.friendship = friendship;
     },
     SET_USER_STATUS: function SET_USER_STATUS(state, status) {
       state.userStatus = status;
