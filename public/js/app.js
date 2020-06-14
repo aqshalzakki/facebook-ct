@@ -2291,18 +2291,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Show',
   components: {
     Post: _components_Post__WEBPACK_IMPORTED_MODULE_1__["default"]
-  },
-  data: function data() {
-    return {
-      posts: null,
-      postsLoading: true
-    };
   },
   created: function created() {
     var _this = this;
@@ -2314,7 +2315,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 0:
               _this.fetchUser(_this.userId);
 
-              _this.fetchPosts(_this.userId);
+              _this.fetchUserPosts(_this.userId);
 
             case 2:
             case "end":
@@ -2325,7 +2326,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }))();
   },
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])({
-    fetchUser: 'fetchUser'
+    fetchUser: 'fetchUser',
+    fetchUserPosts: 'fetchUserPosts'
   }), {
     hasPosts: function hasPosts() {
       return this.posts.data.length > 0;
@@ -2334,46 +2336,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       console.log("".concat(this.userId, " will be added!"));
       this.$store.dispatch('sendFriendRequest', this.userId);
     },
-    fetchPosts: function fetchPosts(userId) {
-      var _this2 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        var response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.prev = 0;
-                _context2.next = 3;
-                return axios.get("users/".concat(userId, "/posts"));
-
-              case 3:
-                response = _context2.sent;
-                _this2.posts = response.data;
-                _context2.next = 10;
-                break;
-
-              case 7:
-                _context2.prev = 7;
-                _context2.t0 = _context2["catch"](0);
-                console.log('Unable to Fetch The Posts!');
-
-              case 10:
-                _context2.prev = 10;
-                _this2.postsLoading = false;
-                return _context2.finish(10);
-
-              case 13:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, null, [[0, 7, 10, 13]]);
-      }))();
+    acceptFriendRequest: function acceptFriendRequest() {
+      console.log("".concat(this.userId, " will be accepted..."));
+      this.$store.dispatch('acceptFriendRequest', this.userId);
+    },
+    ignoreFriendRequest: function ignoreFriendRequest() {
+      console.log("".concat(this.userId, " will be accepted..."));
+      this.$store.dispatch('ignoreFriendRequest', this.userId);
     }
   }),
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])({
     user: 'user',
+    posts: 'posts',
+    statuses: 'statuses',
     friendButtonText: 'friendButtonText'
   }), {
     userId: function userId() {
@@ -2383,7 +2358,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   watch: {
     $route: function $route(to, from) {
       this.fetchUser(to.params.userId);
-      this.fetchPosts(to.params.userId);
+      this.fetchUserPosts(to.params.userId);
     }
   }
 });
@@ -39105,73 +39080,98 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "flex flex-col items-center" },
-    [
-      _c("div", { staticClass: "relative mb-8" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "absolute flex items-center bottom-0 left-0 -mb-8 ml-12 z-20"
-          },
-          [
-            _vm._m(1),
+  return _vm.statuses.user === "success" && _vm.user
+    ? _c(
+        "div",
+        { staticClass: "flex flex-col items-center" },
+        [
+          _c("div", { staticClass: "relative mb-8" }, [
+            _vm._m(0),
             _vm._v(" "),
-            _vm.user
-              ? _c("p", { staticClass: "text-2xl text-gray-100 ml-4" }, [
-                  _vm._v(_vm._s(_vm.user.data.attributes.name))
-                ])
-              : _vm._e()
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-20"
-          },
-          [
-            _vm.friendButtonText
-              ? _c(
-                  "button",
-                  {
-                    staticClass: "py-1 px-3 bg-gray-400 rounded",
-                    on: { click: _vm.addFriend }
-                  },
-                  [
-                    _vm._v(
-                      "\n                " +
-                        _vm._s(_vm.friendButtonText) +
-                        "\n            "
+            _c(
+              "div",
+              {
+                staticClass:
+                  "absolute flex items-center bottom-0 left-0 -mb-8 ml-12 z-20"
+              },
+              [
+                _vm._m(1),
+                _vm._v(" "),
+                _vm.user
+                  ? _c("p", { staticClass: "text-2xl text-gray-100 ml-4" }, [
+                      _vm._v(_vm._s(_vm.user.data.attributes.name))
+                    ])
+                  : _vm._e()
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass:
+                  "absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-20"
+              },
+              [
+                _vm.friendButtonText && _vm.friendButtonText !== "Accept"
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "py-1 px-3 bg-gray-400 rounded",
+                        on: { click: _vm.addFriend }
+                      },
+                      [
+                        _vm._v(
+                          "\n                " +
+                            _vm._s(_vm.friendButtonText) +
+                            "\n            "
+                        )
+                      ]
                     )
-                  ]
-                )
-              : _vm._e()
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _vm.postsLoading
-        ? _c("p", [_vm._v("Loading posts...")])
-        : _vm._l(_vm.posts.data, function(post) {
-            return _c("Post", { key: post.data.post_id, attrs: { post: post } })
-          }),
-      _vm._v(" "),
-      !_vm.postsLoading && !_vm.hasPosts()
-        ? _c("p", [
-            _vm._v(
-              "\n        Oops :( You've got no posts. Get started...\n    "
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.friendButtonText && _vm.friendButtonText === "Accept"
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "mr-2 py-1 px-3 bg-blue-500 rounded",
+                        on: { click: _vm.acceptFriendRequest }
+                      },
+                      [_vm._v("\n                Accept\n            ")]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.friendButtonText && _vm.friendButtonText === "Accept"
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "py-1 px-3 bg-gray-400 rounded",
+                        on: { click: _vm.ignoreFriendRequest }
+                      },
+                      [_vm._v("\n                Ignore\n            ")]
+                    )
+                  : _vm._e()
+              ]
             )
-          ])
-        : _vm._e()
-    ],
-    2
-  )
+          ]),
+          _vm._v(" "),
+          _vm.statuses.posts === "loading"
+            ? _c("div", [_vm._v("Loading posts...")])
+            : !_vm.hasPosts()
+            ? _c("div", [
+                _vm._v(
+                  "\n        Oops :( You've got no posts. Get started...\n    "
+                )
+              ])
+            : _vm._l(_vm.posts.data, function(post) {
+                return _c("Post", {
+                  key: post.data.post_id,
+                  attrs: { post: post }
+                })
+              })
+        ],
+        2
+      )
+    : _vm._e()
 }
 var staticRenderFns = [
   function() {
@@ -55888,11 +55888,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: {
     user: null,
-    userStatus: null
+    userStatus: null,
+    posts: null,
+    postsStatus: null
   },
   getters: {
     user: function user(state) {
       return state.user;
+    },
+    posts: function posts(state) {
+      return state.posts;
+    },
+    statuses: function statuses(state) {
+      return {
+        user: state.userStatus,
+        posts: state.postsStatus
+      };
     },
     friendship: function friendship(state) {
       return state.user.data.attributes.friendship;
@@ -55943,43 +55954,148 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee, null, [[2, 10]]);
       }))();
     },
-    sendFriendRequest: function sendFriendRequest(_ref2, friend_id) {
+    fetchUserPosts: function fetchUserPosts(_ref2, userId) {
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        var commit, _yield$axios$post, data;
-
+        var commit, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 commit = _ref2.commit;
-                commit('SET_BUTTON_TEXT', 'Loading');
+                commit('SET_USER_POSTS_STATUS', "loading");
                 _context2.prev = 2;
                 _context2.next = 5;
-                return axios.post('friend-request', {
-                  friend_id: friend_id
-                });
+                return axios.get("users/".concat(userId, "/posts"));
 
               case 5:
-                _yield$axios$post = _context2.sent;
-                data = _yield$axios$post.data;
-                commit('SET_USER_FRIENDSHIP', data);
-                commit('SET_BUTTON_TEXT', 'Pending Friend Request');
-                console.log('Friend requested!');
-                _context2.next = 16;
+                response = _context2.sent;
+                commit('SET_POSTS', response.data);
+                commit('SET_USER_POSTS_STATUS', "success");
+                _context2.next = 14;
                 break;
 
-              case 12:
-                _context2.prev = 12;
+              case 10:
+                _context2.prev = 10;
                 _context2.t0 = _context2["catch"](2);
-                console.log('Unknown error has been occured! please try again!');
-                commit('SET_BUTTON_TEXT', 'Add Friend');
+                console.log('Unable to Fetch The Posts!');
+                commit('SET_USER_POSTS_STATUS', "error");
 
-              case 16:
+              case 14:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[2, 12]]);
+        }, _callee2, null, [[2, 10]]);
+      }))();
+    },
+    sendFriendRequest: function sendFriendRequest(_ref3, friend_id) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var commit, _yield$axios$post, data;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                commit = _ref3.commit;
+                _context3.prev = 1;
+                _context3.next = 4;
+                return axios.post('friend-request', {
+                  friend_id: friend_id
+                });
+
+              case 4:
+                _yield$axios$post = _context3.sent;
+                data = _yield$axios$post.data;
+                commit('SET_USER_FRIENDSHIP', data);
+                console.log('Friend requested!');
+                _context3.next = 13;
+                break;
+
+              case 10:
+                _context3.prev = 10;
+                _context3.t0 = _context3["catch"](1);
+                console.log('Unknown error has been occured! please try again!');
+
+              case 13:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[1, 10]]);
+      }))();
+    },
+    acceptFriendRequest: function acceptFriendRequest(_ref4, user_id) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        var commit, _yield$axios$post2, data;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                commit = _ref4.commit;
+                _context4.prev = 1;
+                _context4.next = 4;
+                return axios.post('friend-request-response', {
+                  user_id: user_id
+                });
+
+              case 4:
+                _yield$axios$post2 = _context4.sent;
+                data = _yield$axios$post2.data;
+                commit('SET_USER_FRIENDSHIP', data);
+                console.log('Friend requested!');
+                _context4.next = 13;
+                break;
+
+              case 10:
+                _context4.prev = 10;
+                _context4.t0 = _context4["catch"](1);
+                console.log('Unknown error has been occured! please try again!');
+
+              case 13:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, null, [[1, 10]]);
+      }))();
+    },
+    ignoreFriendRequest: function ignoreFriendRequest(_ref5, user_id) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        var commit, _yield$axios$delete, data;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                commit = _ref5.commit;
+                _context5.prev = 1;
+                _context5.next = 4;
+                return axios["delete"]('friend-request-response/delete', {
+                  data: {
+                    user_id: user_id
+                  }
+                });
+
+              case 4:
+                _yield$axios$delete = _context5.sent;
+                data = _yield$axios$delete.data;
+                commit('SET_USER_FRIENDSHIP', data);
+                console.log('Friend requested!');
+                _context5.next = 13;
+                break;
+
+              case 10:
+                _context5.prev = 10;
+                _context5.t0 = _context5["catch"](1);
+                console.log('Unknown error has been occured! please try again!');
+
+              case 13:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, null, [[1, 10]]);
       }))();
     }
   },
@@ -55987,14 +56103,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     SET_USER: function SET_USER(state, user) {
       state.user = user;
     },
+    SET_POSTS: function SET_POSTS(state, posts) {
+      state.posts = posts;
+    },
     SET_USER_FRIENDSHIP: function SET_USER_FRIENDSHIP(state, friendship) {
       state.user.data.attributes.friendship = friendship;
     },
     SET_USER_STATUS: function SET_USER_STATUS(state, status) {
       state.userStatus = status;
     },
-    SET_BUTTON_TEXT: function SET_BUTTON_TEXT(state, text) {
-      state.friendButtonText = text;
+    SET_USER_POSTS_STATUS: function SET_USER_POSTS_STATUS(state, status) {
+      state.postsStatus = status;
     }
   }
 });
